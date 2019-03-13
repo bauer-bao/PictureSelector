@@ -7,12 +7,10 @@ import android.support.annotation.IntRange;
 import android.support.annotation.StyleRes;
 import android.support.v4.app.Fragment;
 
-import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureSelectionConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.DoubleUtils;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,15 +64,6 @@ public class PictureSelectionModel {
      */
     public PictureSelectionModel enableCrop(boolean enableCrop) {
         selectionConfig.enableCrop = enableCrop;
-        return this;
-    }
-
-    /**
-     * @param enablePreviewAudio Do you want to play audio ?
-     * @return
-     */
-    public PictureSelectionModel enablePreviewAudio(boolean enablePreviewAudio) {
-        selectionConfig.enablePreviewAudio = enablePreviewAudio;
         return this;
     }
 
@@ -143,13 +132,13 @@ public class PictureSelectionModel {
     }
 
     /**
-     * @param aspect_ratio_x Crop Proportion x
-     * @param aspect_ratio_y Crop Proportion y
+     * @param aspectRatioX Crop Proportion x
+     * @param aspectRatioY Crop Proportion y
      * @return
      */
-    public PictureSelectionModel withAspectRatio(int aspect_ratio_x, int aspect_ratio_y) {
-        selectionConfig.aspect_ratio_x = aspect_ratio_x;
-        selectionConfig.aspect_ratio_y = aspect_ratio_y;
+    public PictureSelectionModel withAspectRatio(int aspectRatioX, int aspectRatioY) {
+        selectionConfig.aspectRatioX = aspectRatioX;
+        selectionConfig.aspectRatioY = aspectRatioY;
         return this;
     }
 
@@ -172,23 +161,13 @@ public class PictureSelectionModel {
     }
 
     /**
-     * @param videoQuality video quality and 0 or 1
+     * @param videoQuality video quality
      * @return
      */
     public PictureSelectionModel videoQuality(int videoQuality) {
         selectionConfig.videoQuality = videoQuality;
         return this;
     }
-
-    /**
-     * @param suffixType PictureSelector media format
-     * @return
-     */
-    public PictureSelectionModel imageFormat(String suffixType) {
-        selectionConfig.suffixType = suffixType;
-        return this;
-    }
-
 
     /**
      * @param cropWidth  crop width
@@ -234,8 +213,7 @@ public class PictureSelectionModel {
      * @param height glide height
      * @return
      */
-    public PictureSelectionModel glideOverride(@IntRange(from = 100) int width,
-                                               @IntRange(from = 100) int height) {
+    public PictureSelectionModel glideOverride(@IntRange(from = 100) int width, @IntRange(from = 100) int height) {
         selectionConfig.overrideWidth = width;
         selectionConfig.overrideHeight = height;
         return this;
@@ -262,7 +240,7 @@ public class PictureSelectionModel {
     }
 
     /**
-     * @param Less than how many KB images are not compressed
+     * @param size Less than how many KB images are not compressed
      * @return
      */
     public PictureSelectionModel minimumCompressSize(int size) {
@@ -289,24 +267,6 @@ public class PictureSelectionModel {
     }
 
     /**
-     * @param synOrAsy Synchronous or asynchronous compression
-     * @return
-     */
-    public PictureSelectionModel synOrAsy(boolean synOrAsy) {
-        selectionConfig.synOrAsy = synOrAsy;
-        return this;
-    }
-
-    /**
-     * @param path save path
-     * @return
-     */
-    public PictureSelectionModel compressSavePath(String path) {
-        selectionConfig.compressSavePath = path;
-        return this;
-    }
-
-    /**
      * @param zoomAnim Picture list zoom anim
      * @return
      */
@@ -321,15 +281,6 @@ public class PictureSelectionModel {
      */
     public PictureSelectionModel previewEggs(boolean previewEggs) {
         selectionConfig.previewEggs = previewEggs;
-        return this;
-    }
-
-    /**
-     * @param isCamera Whether to open camera button
-     * @return
-     */
-    public PictureSelectionModel isCamera(boolean isCamera) {
-        selectionConfig.isCamera = isCamera;
         return this;
     }
 
@@ -355,26 +306,8 @@ public class PictureSelectionModel {
      * @param enablePreview Do you want to preview the picture?
      * @return
      */
-    public PictureSelectionModel previewImage(boolean enablePreview) {
+    public PictureSelectionModel enablePreview(boolean enablePreview) {
         selectionConfig.enablePreview = enablePreview;
-        return this;
-    }
-
-    /**
-     * @param enPreviewVideo Do you want to preview the video?
-     * @return
-     */
-    public PictureSelectionModel previewVideo(boolean enPreviewVideo) {
-        selectionConfig.enPreviewVideo = enPreviewVideo;
-        return this;
-    }
-
-    /**
-     * @param openClickSound Whether to open click voice
-     * @return
-     */
-    public PictureSelectionModel openClickSound(boolean openClickSound) {
-        selectionConfig.openClickSound = openClickSound;
         return this;
     }
 
@@ -440,9 +373,9 @@ public class PictureSelectionModel {
      * @param position
      * @param medias
      */
-    public void openExternalPreview(int position, String directory_path, List<LocalMedia> medias) {
+    public void openExternalPreview(int position, String directoryPath, List<LocalMedia> medias) {
         if (selector != null) {
-            selector.externalPicturePreview(position, directory_path, medias);
+            selector.externalPicturePreview(position, directoryPath, medias);
         } else {
             throw new NullPointerException("This PictureSelector is Null");
         }

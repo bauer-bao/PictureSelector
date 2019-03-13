@@ -1,11 +1,8 @@
 package com.luck.picture.lib.config;
 
-
-import android.content.Context;
 import android.media.MediaMetadataRetriever;
 import android.text.TextUtils;
 
-import com.luck.picture.lib.R;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import java.io.File;
@@ -16,6 +13,7 @@ import java.io.File;
  * package：com.luck.picture.lib.config
  * email：893855882@qq.com
  * data：2017/5/24
+ *
  * @author luck
  */
 
@@ -32,10 +30,6 @@ public final class PictureMimeType {
         return PictureConfig.TYPE_VIDEO;
     }
 
-    public static int ofAudio() {
-        return PictureConfig.TYPE_AUDIO;
-    }
-
     public static int isPictureType(String pictureType) {
         switch (pictureType) {
             case "image/png":
@@ -49,6 +43,7 @@ public final class PictureMimeType {
             case "image/GIF":
             case "imagex-ms-bmp":
                 return PictureConfig.TYPE_IMAGE;
+
             case "video/3gp":
             case "video/3gpp":
             case "video/3gpp2":
@@ -61,19 +56,10 @@ public final class PictureMimeType {
             case "video/webm":
             case "video/mp2ts":
                 return PictureConfig.TYPE_VIDEO;
-            case "audio/mpeg":
-            case "audio/x-ms-wma":
-            case "audio/x-wav":
-            case "audio/amr":
-            case "audio/wav":
-            case "audio/aac":
-            case "audio/mp4":
-            case "audio/quicktime":
-            case "audio/lamr":
-            case "audio/3gpp":
-                return PictureConfig.TYPE_AUDIO;
+
+            default:
+                return PictureConfig.TYPE_IMAGE;
         }
-        return PictureConfig.TYPE_IMAGE;
     }
 
     /**
@@ -87,48 +73,9 @@ public final class PictureMimeType {
             case "image/gif":
             case "image/GIF":
                 return true;
+            default:
+                return false;
         }
-        return false;
-    }
-
-    /**
-     * 是否是gif
-     *
-     * @param path
-     * @return
-     */
-    public static boolean isImageGif(String path) {
-        if (!TextUtils.isEmpty(path)) {
-            int lastIndex = path.lastIndexOf(".");
-            String pictureType = path.substring(lastIndex, path.length());
-            return pictureType.startsWith(".gif")
-                    || pictureType.startsWith(".GIF");
-        }
-        return false;
-    }
-
-    /**
-     * 是否是视频
-     *
-     * @param pictureType
-     * @return
-     */
-    public static boolean isVideo(String pictureType) {
-        switch (pictureType) {
-            case "video/3gp":
-            case "video/3gpp":
-            case "video/3gpp2":
-            case "video/avi":
-            case "video/mp4":
-            case "video/quicktime":
-            case "video/x-msvideo":
-            case "video/x-matroska":
-            case "video/mpeg":
-            case "video/webm":
-            case "video/mp2ts":
-                return true;
-        }
-        return false;
     }
 
     /**
@@ -139,8 +86,7 @@ public final class PictureMimeType {
      */
     public static boolean isHttp(String path) {
         if (!TextUtils.isEmpty(path)) {
-            if (path.startsWith("http")
-                    || path.startsWith("https")) {
+            if (path.startsWith("http") || path.startsWith("https")) {
                 return true;
             }
         }
@@ -156,13 +102,11 @@ public final class PictureMimeType {
     public static String fileToType(File file) {
         if (file != null) {
             String name = file.getName();
-            if (name.endsWith(".mp4") || name.endsWith(".avi")
-                    || name.endsWith(".3gpp") || name.endsWith(".3gp") || name.startsWith(".mov")) {
+            if (name.endsWith(".mp4") || name.endsWith(".avi") || name.endsWith(".3gpp") || name.endsWith(".3gp") || name.startsWith(".mov")) {
                 return "video/mp4";
             } else if (name.endsWith(".PNG") || name.endsWith(".png") || name.endsWith(".jpeg")
                     || name.endsWith(".gif") || name.endsWith(".GIF") || name.endsWith(".jpg")
-                    || name.endsWith(".webp") || name.endsWith(".WEBP") || name.endsWith(".JPEG")
-                    || name.endsWith(".bmp")) {
+                    || name.endsWith(".webp") || name.endsWith(".WEBP") || name.endsWith(".JPEG") || name.endsWith(".bmp")) {
                 return "image/jpeg";
             } else if (name.endsWith(".mp3") || name.endsWith(".amr")
                     || name.endsWith(".aac") || name.endsWith(".war")
@@ -225,8 +169,6 @@ public final class PictureMimeType {
         if (!TextUtils.isEmpty(pictureType)) {
             if (pictureType.startsWith("video")) {
                 return PictureConfig.TYPE_VIDEO;
-            } else if (pictureType.startsWith("audio")) {
-                return PictureConfig.TYPE_AUDIO;
             }
         }
         return PictureConfig.TYPE_IMAGE;
@@ -300,28 +242,4 @@ public final class PictureMimeType {
             return ".png";
         }
     }
-
-    /**
-     * 根据不同的类型，返回不同的错误提示
-     *
-     * @param mediaMimeType
-     * @return
-     */
-    public static String s(Context context, int mediaMimeType) {
-        Context ctx = context.getApplicationContext();
-        switch (mediaMimeType) {
-            case PictureConfig.TYPE_IMAGE:
-                return ctx.getString(R.string.picture_error);
-            case PictureConfig.TYPE_VIDEO:
-                return ctx.getString(R.string.picture_video_error);
-            case PictureConfig.TYPE_AUDIO:
-                return ctx.getString(R.string.picture_audio_error);
-            default:
-                return ctx.getString(R.string.picture_error);
-        }
-    }
-
-    public final static String JPEG = ".JPEG";
-
-    public final static String PNG = ".png";
 }

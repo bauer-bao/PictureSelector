@@ -66,10 +66,8 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
 
     }
 
-    public BitmapLoadTask(@NonNull Context context,
-                          @NonNull Uri inputUri, @Nullable Uri outputUri,
-                          int requiredWidth, int requiredHeight,
-                          BitmapLoadCallback loadCallback) {
+    public BitmapLoadTask(@NonNull Context context, @NonNull Uri inputUri, @Nullable Uri outputUri,
+                          int requiredWidth, int requiredHeight, BitmapLoadCallback loadCallback) {
         mContext = context;
         mInputUri = inputUri;
         mOutputUri = outputUri;
@@ -182,8 +180,7 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
     }
 
     private String getFilePath() {
-        if (ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(mContext, permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             return FileUtils.getPath(mContext, mInputUri);
         } else {
             return null;
@@ -234,8 +231,7 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
             BufferedInputStream bin;
             bin = new BufferedInputStream(u.openStream());
             OutputStream outputStream = mContext.getContentResolver().openOutputStream(outputUri);
-            BufferedOutputStream bout = new BufferedOutputStream(
-                    outputStream);
+            BufferedOutputStream bout = new BufferedOutputStream(outputStream);
             while ((read = bin.read(buffer)) > -1) {
                 bout.write(buffer, 0, read);
             }

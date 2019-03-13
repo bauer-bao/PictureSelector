@@ -102,7 +102,6 @@ public class RomUtils {
         return false;
     }
 
-
     /**
      * Android Api 23以上
      *

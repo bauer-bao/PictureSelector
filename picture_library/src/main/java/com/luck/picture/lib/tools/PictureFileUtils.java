@@ -6,13 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -62,8 +56,7 @@ public class PictureFileUtils {
      * @return
      */
     public static File createCameraFile(Context context, int type, String outputCameraPath, String format) {
-        String path = !TextUtils.isEmpty(outputCameraPath)
-                ? outputCameraPath : CAMERA_PATH;
+        String path = !TextUtils.isEmpty(outputCameraPath) ? outputCameraPath : CAMERA_PATH;
 
         return createMediaFile(context, path, type, format);
     }
@@ -80,8 +73,7 @@ public class PictureFileUtils {
 
     private static File createMediaFile(Context context, String parentPath, int type, String format) {
         String state = Environment.getExternalStorageState();
-        File rootDir = state.equals(Environment.MEDIA_MOUNTED) ?
-                Environment.getExternalStorageDirectory() : context.getCacheDir();
+        File rootDir = state.equals(Environment.MEDIA_MOUNTED) ? Environment.getExternalStorageDirectory() : context.getCacheDir();
 
         File folderDir = new File(rootDir.getAbsolutePath() + parentPath);
         if (!folderDir.exists() && folderDir.mkdirs()) {
@@ -92,14 +84,13 @@ public class PictureFileUtils {
         String fileName = APP_NAME + "_" + timeStamp + "";
         File tmpFile = null;
         String suffixType;
-        switch (type) {
-            case PictureConfig.TYPE_IMAGE:
-                suffixType = TextUtils.isEmpty(format) ? POSTFIX : format;
-                tmpFile = new File(folderDir, fileName + suffixType);
-                break;
-            case PictureConfig.TYPE_VIDEO:
-                tmpFile = new File(folderDir, fileName + POST_VIDEO);
-                break;
+        if (type == PictureConfig.TYPE_IMAGE) {
+            suffixType = TextUtils.isEmpty(format) ? POSTFIX : format;
+            tmpFile = new File(folderDir, fileName + suffixType);
+
+        } else if (type == PictureConfig.TYPE_VIDEO) {
+            tmpFile = new File(folderDir, fileName + POST_VIDEO);
+
         }
         return tmpFile;
     }
@@ -159,18 +150,14 @@ public class PictureFileUtils {
      * @return The value of the _data column, which is typically a file path.
      * @author paulburke
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
-        final String[] projection = {
-                column
-        };
+        final String[] projection = {column};
 
         try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
@@ -236,18 +223,16 @@ public class PictureFileUtils {
                 }
 
                 // TODO handle non-primary volumes
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
+            } else if (isDownloadsDocument(uri)) {
+                // DownloadsProvider
 
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
                 return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
+            } else if (isMediaDocument(uri)) {
+                // MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -262,9 +247,7 @@ public class PictureFileUtils {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
-                        split[1]
-                };
+                final String[] selectionArgs = new String[]{split[1]};
 
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
@@ -316,36 +299,6 @@ public class PictureFileUtils {
     }
 
     /**
-     * Copies one file into the other with the given paths.
-     * In the event that the paths are the same, trying to copy one file to the other
-     * will cause both files to become null.
-     * Simply skipping this step if the paths are identical.
-     */
-    public static boolean copyAudioFile(@NonNull String pathFrom, @NonNull String pathTo) throws IOException {
-        if (pathFrom.equalsIgnoreCase(pathTo)) {
-            return false;
-        }
-
-        FileChannel outputChannel = null;
-        FileChannel inputChannel = null;
-        try {
-            inputChannel = new FileInputStream(new File(pathFrom)).getChannel();
-            outputChannel = new FileOutputStream(new File(pathTo)).getChannel();
-            inputChannel.transferTo(0, inputChannel.size(), outputChannel);
-            inputChannel.close();
-        } finally {
-            if (inputChannel != null) {
-                inputChannel.close();
-            }
-            if (outputChannel != null) {
-                outputChannel.close();
-            }
-            boolean success = PictureFileUtils.deleteFile(pathFrom);
-            return success;
-        }
-    }
-
-    /**
      * 读取图片属性：旋转的角度
      *
      * @param path 图片绝对路径
@@ -366,6 +319,8 @@ public class PictureFileUtils {
                 case ExifInterface.ORIENTATION_ROTATE_270:
                     degree = 270;
                     break;
+                default:
+                    break;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -373,8 +328,9 @@ public class PictureFileUtils {
         return degree;
     }
 
-    /*
+    /**
      * 旋转图片
+     *
      * @param angle
      * @param bitmap
      * @return Bitmap
@@ -385,8 +341,7 @@ public class PictureFileUtils {
         matrix.postRotate(angle);
         System.out.println("angle2=" + angle);
         // 创建新的图片
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
-                bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
         return resizedBitmap;
     }
 
@@ -399,70 +354,6 @@ public class PictureFileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 转换图片成圆形
-     *
-     * @param bitmap 传入Bitmap对象
-     * @return
-     */
-    public static Bitmap toRoundBitmap(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        float roundPx;
-        float left, top, right, bottom, dst_left, dst_top, dst_right, dst_bottom;
-        if (width <= height) {
-            roundPx = width / 2;
-
-            left = 0;
-            top = 0;
-            right = width;
-            bottom = width;
-
-            height = width;
-
-            dst_left = 0;
-            dst_top = 0;
-            dst_right = width;
-            dst_bottom = width;
-        } else {
-            roundPx = height / 2;
-
-            float clip = (width - height) / 2;
-
-            left = clip;
-            right = width - clip;
-            top = 0;
-            bottom = height;
-            width = height;
-
-            dst_left = 0;
-            dst_top = 0;
-            dst_right = height;
-            dst_bottom = height;
-        }
-
-        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final Paint paint = new Paint();
-        final Rect src = new Rect((int) left, (int) top, (int) right, (int) bottom);
-        final Rect dst = new Rect((int) dst_left, (int) dst_top, (int) dst_right, (int) dst_bottom);
-        final RectF rectF = new RectF(dst);
-
-        paint.setAntiAlias(true);// 设置画笔无锯齿
-
-        canvas.drawARGB(0, 0, 0, 0); // 填充整个Canvas
-
-        // 以下有两种方法画圆,drawRounRect和drawCircle
-        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);// 画圆角矩形，第一个参数为图形显示区域，第二个参数和第三个参数分别是水平圆角半径和垂直圆角半径。
-        // canvas.drawCircle(roundPx, roundPx, roundPx, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));// 设置两张图片相交时的模式,参考http://trylovecatch.iteye.com/blog/1189452
-        canvas.drawBitmap(bitmap, src, dst, paint); // 以Mode.SRC_IN模式合并bitmap和已经draw了的Circle
-
-        return output;
     }
 
     /**
@@ -490,24 +381,21 @@ public class PictureFileUtils {
         return path + "/" + filename;
     }
 
-
     /**
      * image is Damage
      *
      * @param path
      * @return
      */
-    public static int isDamage(String path) {
-        BitmapFactory.Options options = null;
-        if (options == null) options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options); //filePath代表图片路径
-        if (options.mCancel || options.outWidth == -1
-                || options.outHeight == -1) {
+    public static boolean isDamage(String path, int imageType) {
+        if (imageType == PictureConfig.TYPE_IMAGE) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, options); //filePath代表图片路径
             //表示图片已损毁
-            return -1;
+            return options.mCancel || options.outWidth == -1 || options.outHeight == -1;
         }
-        return 0;
+        return false;
     }
 
     /**
@@ -534,8 +422,7 @@ public class PictureFileUtils {
     public static String getDCIMCameraPath() {
         String absolutePath;
         try {
-            absolutePath = "%" + Environment.getExternalStoragePublicDirectory
-                    (Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera";
+            absolutePath = "%" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Camera";
         } catch (Exception e) {
             e.printStackTrace();
             return "";

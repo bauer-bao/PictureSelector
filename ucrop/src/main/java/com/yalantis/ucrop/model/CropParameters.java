@@ -15,8 +15,7 @@ public class CropParameters {
     private ExifInfo mExifInfo;
 
 
-    public CropParameters(int maxResultImageSizeX, int maxResultImageSizeY,
-                          Bitmap.CompressFormat compressFormat, int compressQuality,
+    public CropParameters(int maxResultImageSizeX, int maxResultImageSizeY, Bitmap.CompressFormat compressFormat, int compressQuality,
                           String imageInputPath, String imageOutputPath, ExifInfo exifInfo) {
         mMaxResultImageSizeX = maxResultImageSizeX;
         mMaxResultImageSizeY = maxResultImageSizeY;

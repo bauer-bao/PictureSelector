@@ -1,6 +1,5 @@
 package com.luck.picture.lib.dialog;
 
-
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -20,7 +19,7 @@ public class PictureDialog extends Dialog {
         window.setWindowAnimations(R.style.DialogWindowStyle);
     }
 
-
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.picture_alert_dialog);

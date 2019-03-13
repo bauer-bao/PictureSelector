@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
@@ -28,7 +27,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:enabled="false"
-            android:gravity="left|center"
+            android:gravity="start|center"
             android:padding="12dp"
             android:text="@string/picture_preview"
             android:textColor="?attr/picture.preview.textColor"
@@ -38,7 +37,7 @@
             android:id="@+id/id_ll_ok"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:enabled="false"
             android:gravity="center_vertical"
@@ -48,7 +47,7 @@
                 android:id="@+id/picture_tv_img_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:background="?attr/picture.num.style"
                 android:gravity="center"
                 android:text="0"
@@ -60,15 +59,15 @@
                 android:id="@+id/picture_tv_ok"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center|left"
-                android:paddingRight="12dp"
+                android:gravity="center|start"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
                 android:text="@string/picture_please_select"
                 android:textColor="?attr/picture.complete.textColor"
                 android:textSize="14sp" />
 
         </LinearLayout>
     </RelativeLayout>
-
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/picture_recycler"
@@ -92,5 +91,4 @@
         android:textColor="@color/tab_color_false"
         android:textSize="18sp"
         android:visibility="invisible" />
-
 </RelativeLayout>

@@ -1,8 +1,8 @@
 package com.luck.picture.lib.observable;
 
-
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.entity.LocalMediaFolder;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,19 +39,16 @@ public class ImagesObservable implements SubjectListener {
         return sObserver;
     }
 
-
     /**
      * 存储文件夹图片
      *
      * @param list
      */
-
     public void saveLocalFolders(List<LocalMediaFolder> list) {
         if (list != null) {
             folders = list;
         }
     }
-
 
     /**
      * 存储图片
@@ -61,7 +58,6 @@ public class ImagesObservable implements SubjectListener {
     public void saveLocalMedia(List<LocalMedia> list) {
         medias = list;
     }
-
 
     /**
      * 读取图片
@@ -83,14 +79,12 @@ public class ImagesObservable implements SubjectListener {
         return folders;
     }
 
-
     /**
      * 读取选中的图片
      */
     public List<LocalMedia> readSelectLocalMedias() {
         return selectedImages;
     }
-
 
     public void clearLocalFolders() {
         if (folders != null) {

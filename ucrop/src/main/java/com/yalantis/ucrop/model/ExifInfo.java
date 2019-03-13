@@ -41,13 +41,21 @@ public class ExifInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         ExifInfo exifInfo = (ExifInfo) o;
 
-        if (mExifOrientation != exifInfo.mExifOrientation) return false;
-        if (mExifDegrees != exifInfo.mExifDegrees) return false;
+        if (mExifOrientation != exifInfo.mExifOrientation) {
+            return false;
+        }
+        if (mExifDegrees != exifInfo.mExifDegrees) {
+            return false;
+        }
         return mExifTranslation == exifInfo.mExifTranslation;
 
     }

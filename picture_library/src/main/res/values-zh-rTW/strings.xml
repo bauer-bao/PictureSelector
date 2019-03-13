@@ -1,0 +1,23 @@
+<resources>
+    <string name="picture_camera_roll">相機膠捲</string>
+    <string name="picture_cancel">取消</string>
+    <string name="picture_take_picture">拍攝</string>
+    <string name="picture_message_max_num">你最多可以選擇%1$s張照片</string>
+    <string name="picture_preview">預覽</string>
+    <string name="picture_done_front_num">%1$d/%2$d 完成</string>
+    <string name="picture_completed">已完成</string>
+    <string name="picture_please_select">請選擇</string>
+    <string name="picture_empty_title">無視頻或照片\n</string>
+    <string name="picture_empty">你可以使用相機拍攝照片或視頻</string>
+    <string name="picture_min_img_num">照片最低選擇不能少於%1$s張</string>
+    <string name="picture_gif_tag">動圖</string>
+    <string name="picture_jurisdiction">讀取內存卡權限被拒絕</string>
+    <string name="picture_camera">獲取內存卡權限或者系統相機權限或者麥克風權限被拒絕</string>
+    <string name="picture_record_video">錄視頻</string>
+    <string name="picture_photograph">拍照</string>
+    <string name="picture_long_chart">長圖</string>
+    <string name="picture_play_audio">播放</string>
+    <string name="picture_stop_audio">停止</string>
+    <string name="picture_quit_audio">退出</string>
+    <string name="picture_source_error">資源已損壞</string>
+</resources>

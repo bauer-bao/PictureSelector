@@ -131,8 +131,7 @@ public class BitmapCropTask extends AsyncTask<Void, Void, Throwable> {
             Matrix tempMatrix = new Matrix();
             tempMatrix.setRotate(mCurrentAngle, mViewBitmap.getWidth() / 2, mViewBitmap.getHeight() / 2);
 
-            Bitmap rotatedBitmap = Bitmap.createBitmap(mViewBitmap, 0, 0, mViewBitmap.getWidth(), mViewBitmap.getHeight(),
-                    tempMatrix, true);
+            Bitmap rotatedBitmap = Bitmap.createBitmap(mViewBitmap, 0, 0, mViewBitmap.getWidth(), mViewBitmap.getHeight(), tempMatrix, true);
             if (mViewBitmap != rotatedBitmap) {
                 mViewBitmap.recycle();
             }

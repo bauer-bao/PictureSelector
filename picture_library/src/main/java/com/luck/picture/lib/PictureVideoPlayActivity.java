@@ -11,12 +11,15 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+/**
+ * @author luck
+ */
 public class PictureVideoPlayActivity extends PictureBaseActivity implements MediaPlayer.OnErrorListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, View.OnClickListener {
-    private String video_path = "";
-    private ImageView picture_left_back;
+    private String videoPath;
+    private ImageView pictureLeftBackIv;
     private MediaController mMediaController;
     private VideoView mVideoView;
-    private ImageView iv_play;
+    private ImageView playIv;
     private int mPositionWhenPaused = -1;
 
     @Override
@@ -24,24 +27,23 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.picture_activity_video_play);
-        video_path = getIntent().getStringExtra("video_path");
-        picture_left_back = (ImageView) findViewById(R.id.picture_left_back);
-        mVideoView = (VideoView) findViewById(R.id.video_view);
+        videoPath = getIntent().getStringExtra("video_path");
+        pictureLeftBackIv = findViewById(R.id.picture_left_back);
+        mVideoView = findViewById(R.id.video_view);
         mVideoView.setBackgroundColor(Color.BLACK);
-        iv_play = (ImageView) findViewById(R.id.iv_play);
+        playIv = findViewById(R.id.iv_play);
         mMediaController = new MediaController(this);
         mVideoView.setOnCompletionListener(this);
         mVideoView.setOnPreparedListener(this);
         mVideoView.setMediaController(mMediaController);
-        picture_left_back.setOnClickListener(this);
-        iv_play.setOnClickListener(this);
+        pictureLeftBackIv.setOnClickListener(this);
+        playIv.setOnClickListener(this);
     }
-
 
     @Override
     public void onStart() {
         // Play Video
-        mVideoView.setVideoPath(video_path);
+        mVideoView.setVideoPath(videoPath);
         mVideoView.start();
         super.onStart();
     }
@@ -51,7 +53,6 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
         // Stop video when the activity is pause.
         mPositionWhenPaused = mVideoView.getCurrentPosition();
         mVideoView.stopPlayback();
-
         super.onPause();
     }
 
@@ -59,7 +60,6 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
     protected void onDestroy() {
         mMediaController = null;
         mVideoView = null;
-        iv_play = null;
         super.onDestroy();
     }
 
@@ -70,7 +70,6 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
             mVideoView.seekTo(mPositionWhenPaused);
             mPositionWhenPaused = -1;
         }
-
         super.onResume();
     }
 
@@ -81,10 +80,7 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (null != iv_play) {
-            iv_play.setVisibility(View.VISIBLE);
-        }
-
+        playIv.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -94,7 +90,7 @@ public class PictureVideoPlayActivity extends PictureBaseActivity implements Med
             finish();
         } else if (id == R.id.iv_play) {
             mVideoView.start();
-            iv_play.setVisibility(View.INVISIBLE);
+            playIv.setVisibility(View.INVISIBLE);
         }
     }
 

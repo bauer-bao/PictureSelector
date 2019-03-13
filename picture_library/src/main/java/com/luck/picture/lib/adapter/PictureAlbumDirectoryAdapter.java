@@ -16,7 +16,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.luck.picture.lib.R;
-import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.entity.LocalMediaFolder;
 
@@ -33,7 +32,6 @@ import java.util.List;
 public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAlbumDirectoryAdapter.ViewHolder> {
     private Context mContext;
     private List<LocalMediaFolder> folders = new ArrayList<>();
-    private int mimeType;
 
     public PictureAlbumDirectoryAdapter(Context mContext) {
         super();
@@ -43,10 +41,6 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
     public void bindFolderData(List<LocalMediaFolder> folders) {
         this.folders = folders;
         notifyDataSetChanged();
-    }
-
-    public void setMimeType(int mimeType) {
-        this.mimeType = mimeType;
     }
 
     public List<LocalMediaFolder> getFolderData() {
@@ -70,34 +64,28 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
         String imagePath = folder.getFirstImagePath();
         boolean isChecked = folder.isChecked();
         int checkedNum = folder.getCheckedNum();
-        holder.tv_sign.setVisibility(checkedNum > 0 ? View.VISIBLE : View.INVISIBLE);
+        holder.signTv.setVisibility(checkedNum > 0 ? View.VISIBLE : View.INVISIBLE);
         holder.itemView.setSelected(isChecked);
-        if (mimeType == PictureMimeType.ofAudio()) {
-            holder.first_image.setImageResource(R.drawable.audio_placeholder);
-        } else {
-            RequestOptions options = new RequestOptions()
-                    .placeholder(R.drawable.ic_placeholder)
-                    .centerCrop()
-                    .sizeMultiplier(0.5f)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .override(160, 160);
-            Glide.with(holder.itemView.getContext())
-                    .asBitmap()
-                    .load(imagePath)
-                    .apply(options)
-                    .into(new BitmapImageViewTarget(holder.first_image) {
-                        @Override
-                        protected void setResource(Bitmap resource) {
-                            RoundedBitmapDrawable circularBitmapDrawable =
-                                    RoundedBitmapDrawableFactory.
-                                            create(mContext.getResources(), resource);
-                            circularBitmapDrawable.setCornerRadius(8);
-                            holder.first_image.setImageDrawable(circularBitmapDrawable);
-                        }
-                    });
-        }
-        holder.image_num.setText("(" + imageNum + ")");
-        holder.tv_folder_name.setText(name);
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.drawable.ic_placeholder)
+                .centerCrop()
+                .sizeMultiplier(0.5f)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(160, 160);
+        Glide.with(holder.itemView.getContext())
+                .asBitmap()
+                .load(imagePath)
+                .apply(options)
+                .into(new BitmapImageViewTarget(holder.firstImageIv) {
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(mContext.getResources(), resource);
+                        circularBitmapDrawable.setCornerRadius(8);
+                        holder.firstImageIv.setImageDrawable(circularBitmapDrawable);
+                    }
+                });
+        holder.imageNumTv.setText("(" + imageNum + ")");
+        holder.folderNameTv.setText(name);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,15 +107,15 @@ public class PictureAlbumDirectoryAdapter extends RecyclerView.Adapter<PictureAl
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView first_image;
-        TextView tv_folder_name, image_num, tv_sign;
+        ImageView firstImageIv;
+        TextView folderNameTv, imageNumTv, signTv;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            first_image = (ImageView) itemView.findViewById(R.id.first_image);
-            tv_folder_name = (TextView) itemView.findViewById(R.id.tv_folder_name);
-            image_num = (TextView) itemView.findViewById(R.id.image_num);
-            tv_sign = (TextView) itemView.findViewById(R.id.tv_sign);
+            firstImageIv = itemView.findViewById(R.id.first_image);
+            folderNameTv = itemView.findViewById(R.id.tv_folder_name);
+            imageNumTv = itemView.findViewById(R.id.image_num);
+            signTv = itemView.findViewById(R.id.tv_sign);
         }
     }
 

@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.StyleRes;
 
+import com.cjt2325.cameralibrary.JCameraView;
 import com.luck.picture.lib.R;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.tools.PictureFileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,51 +20,142 @@ import java.util.List;
  */
 
 public final class PictureSelectionConfig implements Parcelable {
+    /**
+     * 文件类型，1.图片和视频，2.图片，3.视频 三种
+     */
     public int mimeType;
+    /**
+     * 拍照，还是打开相册
+     */
     public boolean camera;
+    /**
+     * 拍照保存地址
+     */
     public String outputCameraPath;
-    public String compressSavePath;
-    public String suffixType;
+    /**
+     * 样式
+     */
     @StyleRes
     public int themeStyleId;
+    /**
+     * 单选或者多选
+     */
     public int selectionMode;
+    /**
+     * 选择范围
+     */
     public int maxSelectNum;
     public int minSelectNum;
-    public int videoQuality;
-    public int cropCompressQuality;
-    public int videoMaxSecond;
-    public int videoMinSecond;
-    public int recordVideoSecond;
-    public int minimumCompressSize;
+    /**
+     * 图片显示列数
+     */
     public int imageSpanCount;
+    /**
+     * 是否支持预览
+     */
+    public boolean enablePreview;
+    /**
+     * 缩放效果
+     */
+    public boolean zoomAnim;
+    /**
+     * 图片加载的宽高
+     */
     public int overrideWidth;
     public int overrideHeight;
-    public int aspect_ratio_x;
-    public int aspect_ratio_y;
+    /**
+     * 显示gif
+     */
+    public boolean isGif;
+    /**
+     * 选中的时候以数字模式展示
+     */
+    public boolean checkNumMode;
+    /**
+     * 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
+     */
+    public boolean previewEggs;
+    /**
+     * glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
+     */
     public float sizeMultiplier;
+    /**
+     * 视频录制质量
+     */
+    public int videoQuality;
+    /**
+     * 视频录制时长
+     */
+    public int recordVideoSecond;
+    /**
+     * 查询视频的最大长度
+     */
+    public int videoMaxSecond;
+    /**
+     * 查询视频的最小长度
+     */
+    public int videoMinSecond;
+    /**
+     * 是否压缩
+     */
+    public boolean isCompress;
+    /**
+     * 最小开始压缩的尺寸
+     */
+    public int minimumCompressSize;
+    /**
+     * 是否裁剪
+     */
+    public boolean enableCrop;
+    /**
+     * 裁剪比例
+     */
+    public int aspectRatioX;
+    public int aspectRatioY;
+    /**
+     * 显示底部操作栏
+     */
+    public boolean hideBottomControls;
+    /**
+     * 裁剪压缩质量
+     */
+    public int cropCompressQuality;
+    /**
+     * 裁剪宽高比
+     */
     public int cropWidth;
     public int cropHeight;
-    public boolean zoomAnim;
-    public boolean isCompress;
-    public boolean isCamera;
-    public boolean isGif;
-    public boolean enablePreview;
-    public boolean enPreviewVideo;
-    public boolean enablePreviewAudio;
-    public boolean checkNumMode;
-    public boolean openClickSound;
-    public boolean enableCrop;
-    public boolean freeStyleCropEnabled;
-    public boolean circleDimmedLayer;
+    /**
+     * 是否显示裁剪矩形框
+     */
     public boolean showCropFrame;
+    /**
+     * 是否显示裁剪网格
+     */
     public boolean showCropGrid;
-    public boolean hideBottomControls;
-    public boolean rotateEnabled;
-    public boolean scaleEnabled;
-    public boolean previewEggs;
-    public boolean synOrAsy;
+    /**
+     * 裁剪框是否可拖拽，整个拖拽
+     */
+    public boolean freeStyleCropEnabled;
+    /**
+     * 圆形裁剪框
+     */
+    public boolean circleDimmedLayer;
+    /**
+     * 裁剪框是否可拖拽，调整比例
+     */
     public boolean isDragFrame;
-
+    /**
+     * 支持旋转
+     */
+    public boolean rotateEnabled;
+    /**
+     * 支持缩放
+     */
+    public boolean scaleEnabled;
+    /**
+     * 是否传入已选图片
+     */
     public List<LocalMedia> selectionMedias;
 
     private void reset() {
@@ -74,27 +165,23 @@ public final class PictureSelectionConfig implements Parcelable {
         selectionMode = PictureConfig.MULTIPLE;
         maxSelectNum = 9;
         minSelectNum = 0;
-        videoQuality = 1;
+        videoQuality = JCameraView.MEDIA_QUALITY_MIDDLE;
         cropCompressQuality = 90;
         videoMaxSecond = 0;
         videoMinSecond = 0;
-        recordVideoSecond = 60;
+        recordVideoSecond = 10;
         minimumCompressSize = PictureConfig.MAX_COMPRESS_SIZE;
         imageSpanCount = 4;
         overrideWidth = 0;
         overrideHeight = 0;
         isCompress = false;
-        aspect_ratio_x = 0;
-        aspect_ratio_y = 0;
+        aspectRatioX = 0;
+        aspectRatioY = 0;
         cropWidth = 0;
         cropHeight = 0;
-        isCamera = true;
         isGif = false;
         enablePreview = true;
-        enPreviewVideo = true;
-        enablePreviewAudio = true;
         checkNumMode = false;
-        openClickSound = false;
         enableCrop = false;
         freeStyleCropEnabled = false;
         circleDimmedLayer = false;
@@ -104,12 +191,9 @@ public final class PictureSelectionConfig implements Parcelable {
         rotateEnabled = true;
         scaleEnabled = true;
         previewEggs = false;
-        synOrAsy = true;
         zoomAnim = true;
         isDragFrame = true;
         outputCameraPath = "";
-        compressSavePath = "";
-        suffixType = PictureFileUtils.POSTFIX;
         sizeMultiplier = 0.5f;
         selectionMedias = new ArrayList<>();
     }
@@ -138,8 +222,6 @@ public final class PictureSelectionConfig implements Parcelable {
         dest.writeInt(this.mimeType);
         dest.writeByte(this.camera ? (byte) 1 : (byte) 0);
         dest.writeString(this.outputCameraPath);
-        dest.writeString(this.compressSavePath);
-        dest.writeString(this.suffixType);
         dest.writeInt(this.themeStyleId);
         dest.writeInt(this.selectionMode);
         dest.writeInt(this.maxSelectNum);
@@ -153,20 +235,16 @@ public final class PictureSelectionConfig implements Parcelable {
         dest.writeInt(this.imageSpanCount);
         dest.writeInt(this.overrideWidth);
         dest.writeInt(this.overrideHeight);
-        dest.writeInt(this.aspect_ratio_x);
-        dest.writeInt(this.aspect_ratio_y);
+        dest.writeInt(this.aspectRatioX);
+        dest.writeInt(this.aspectRatioY);
         dest.writeFloat(this.sizeMultiplier);
         dest.writeInt(this.cropWidth);
         dest.writeInt(this.cropHeight);
         dest.writeByte(this.zoomAnim ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isCompress ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.isCamera ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isGif ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enablePreview ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.enPreviewVideo ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.enablePreviewAudio ? (byte) 1 : (byte) 0);
         dest.writeByte(this.checkNumMode ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.openClickSound ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enableCrop ? (byte) 1 : (byte) 0);
         dest.writeByte(this.freeStyleCropEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.circleDimmedLayer ? (byte) 1 : (byte) 0);
@@ -176,7 +254,6 @@ public final class PictureSelectionConfig implements Parcelable {
         dest.writeByte(this.rotateEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.scaleEnabled ? (byte) 1 : (byte) 0);
         dest.writeByte(this.previewEggs ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.synOrAsy ? (byte) 1 : (byte) 0);
         dest.writeByte(this.isDragFrame ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.selectionMedias);
     }
@@ -188,8 +265,6 @@ public final class PictureSelectionConfig implements Parcelable {
         this.mimeType = in.readInt();
         this.camera = in.readByte() != 0;
         this.outputCameraPath = in.readString();
-        this.compressSavePath = in.readString();
-        this.suffixType = in.readString();
         this.themeStyleId = in.readInt();
         this.selectionMode = in.readInt();
         this.maxSelectNum = in.readInt();
@@ -203,20 +278,16 @@ public final class PictureSelectionConfig implements Parcelable {
         this.imageSpanCount = in.readInt();
         this.overrideWidth = in.readInt();
         this.overrideHeight = in.readInt();
-        this.aspect_ratio_x = in.readInt();
-        this.aspect_ratio_y = in.readInt();
+        this.aspectRatioX = in.readInt();
+        this.aspectRatioY = in.readInt();
         this.sizeMultiplier = in.readFloat();
         this.cropWidth = in.readInt();
         this.cropHeight = in.readInt();
         this.zoomAnim = in.readByte() != 0;
         this.isCompress = in.readByte() != 0;
-        this.isCamera = in.readByte() != 0;
         this.isGif = in.readByte() != 0;
         this.enablePreview = in.readByte() != 0;
-        this.enPreviewVideo = in.readByte() != 0;
-        this.enablePreviewAudio = in.readByte() != 0;
         this.checkNumMode = in.readByte() != 0;
-        this.openClickSound = in.readByte() != 0;
         this.enableCrop = in.readByte() != 0;
         this.freeStyleCropEnabled = in.readByte() != 0;
         this.circleDimmedLayer = in.readByte() != 0;
@@ -226,7 +297,6 @@ public final class PictureSelectionConfig implements Parcelable {
         this.rotateEnabled = in.readByte() != 0;
         this.scaleEnabled = in.readByte() != 0;
         this.previewEggs = in.readByte() != 0;
-        this.synOrAsy = in.readByte() != 0;
         this.isDragFrame = in.readByte() != 0;
         this.selectionMedias = in.createTypedArrayList(LocalMedia.CREATOR);
     }

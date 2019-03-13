@@ -35,7 +35,7 @@
             android:id="@+id/ll_check"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingLeft="16dp"
@@ -51,7 +51,6 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
-
 
     <com.luck.picture.lib.widget.PreviewViewPager
         android:id="@+id/preview_pager"
@@ -70,7 +69,7 @@
             android:id="@+id/id_ll_ok"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -79,7 +78,7 @@
                 android:id="@+id/tv_img_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"
                 android:background="?attr/picture.num.style"
                 android:gravity="center"
                 android:text="0"
@@ -92,12 +91,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:enabled="false"
-                android:gravity="center|left"
-                android:paddingRight="12dp"
+                android:gravity="center|start"
+                android:paddingStart="0dp"
+                android:paddingEnd="12dp"
                 android:text="请选择"
                 android:textColor="?attr/picture.ac_preview.complete.textColor"
                 android:textSize="14sp" />
-
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

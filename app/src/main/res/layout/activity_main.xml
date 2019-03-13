@@ -69,57 +69,6 @@
             <include layout="@layout/layout_number" />
 
             <RadioGroup
-                android:id="@+id/rgb_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/rb_default_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="默认样式"
-                    android:textColor="@color/color_53"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/rb_white_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="样式一"
-                    android:textColor="@color/color_53"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/rb_num_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="样式二"
-                    android:textColor="@color/color_53"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/rb_sina_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="样式三"
-                    android:textColor="@color/color_53"
-                    android:textSize="14sp" />
-
-            </RadioGroup>
-
-            <CheckBox
-                android:id="@+id/cb_voice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="是否开启点击声音"
-                android:textColor="@color/color_53"
-                android:textSize="14sp" />
-
-            <RadioGroup
                 android:id="@+id/rgb_photo_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -150,15 +99,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:text="视频"
-                    android:textColor="@color/color_53"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/rb_audio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="音频"
                     android:textColor="@color/color_53"
                     android:textSize="14sp" />
             </RadioGroup>

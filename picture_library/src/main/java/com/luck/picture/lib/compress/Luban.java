@@ -35,12 +35,10 @@ public class Luban implements Handler.Callback {
     private OnCompressListener mCompressListener;
     private int index = -1;
     private Handler mHandler;
-    private Context context;
 
     private Luban(Builder builder) {
         this.mPaths = builder.mPaths;
         this.medias = builder.medias;
-        this.context = builder.context;
         this.mTargetDir = builder.mTargetDir;
         this.mCompressListener = builder.mCompressListener;
         this.mLeastCompressSize = builder.mLeastCompressSize;
@@ -61,11 +59,8 @@ public class Luban implements Handler.Callback {
             mTargetDir = getImageCacheDir(context).getAbsolutePath();
         }
 
-        String cacheBuilder = mTargetDir + "/" +
-                System.currentTimeMillis() +
-                (int) (Math.random() * 1000) +
-                (TextUtils.isEmpty(suffix) ? ".jpg" : suffix);
-
+        String cacheBuilder = mTargetDir + "/" + System.currentTimeMillis() +
+                (int) (Math.random() * 1000) + (TextUtils.isEmpty(suffix) ? ".jpg" : suffix);
         return new File(cacheBuilder);
     }
 
@@ -187,7 +182,9 @@ public class Luban implements Handler.Callback {
 
     @Override
     public boolean handleMessage(Message msg) {
-        if (mCompressListener == null) return false;
+        if (mCompressListener == null) {
+            return false;
+        }
 
         switch (msg.what) {
             case MSG_COMPRESS_START:
@@ -198,6 +195,9 @@ public class Luban implements Handler.Callback {
                 break;
             case MSG_COMPRESS_ERROR:
                 mCompressListener.onError((Throwable) msg.obj);
+                break;
+
+            default:
                 break;
         }
         return false;

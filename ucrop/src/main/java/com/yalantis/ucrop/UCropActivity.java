@@ -144,7 +144,7 @@ public class UCropActivity extends AppCompatActivity {
                 menuItemLoaderIcon.setColorFilter(mToolbarWidgetColor, PorterDuff.Mode.SRC_ATOP);
                 menuItemLoader.setIcon(menuItemLoaderIcon);
             } catch (IllegalStateException e) {
-                Log.i(TAG, String.format("%s - %s", e.getMessage(), getString(R.string.ucrop_mutate_exception_hint)));
+                Log.i(TAG, String.format("%s - %s", e.getMessage(), "Therefore, override color resource (ucrop_color_toolbar_widget) in your app to make it work on pre-L devices"));
             }
             ((Animatable) menuItemLoader.getIcon()).start();
         }
@@ -203,7 +203,7 @@ public class UCropActivity extends AppCompatActivity {
                 closeActivity();
             }
         } else {
-            setResultError(new NullPointerException(getString(R.string.ucrop_error_input_data_is_absent)));
+            setResultError(new NullPointerException("Both input and output Uri must be specified"));
             closeActivity();
         }
     }
@@ -596,7 +596,9 @@ public class UCropActivity extends AppCompatActivity {
     }
 
     private void setWidgetState(@IdRes int stateViewId) {
-        if (!mShowBottomControls) return;
+        if (!mShowBottomControls) {
+            return;
+        }
 
         mWrapperStateAspectRatio.setSelected(stateViewId == R.id.state_aspect_ratio);
         mWrapperStateRotate.setSelected(stateViewId == R.id.state_rotate);

@@ -23,8 +23,7 @@ public class LightStatusBarUtils {
         setLightStatusBar(activity, false, false, false, dark);
     }
 
-    public static void setLightStatusBar(Activity activity, boolean isMarginStatusBar
-            , boolean isMarginNavigationBar, boolean isTransStatusBar, boolean dark) {
+    public static void setLightStatusBar(Activity activity, boolean isMarginStatusBar, boolean isMarginNavigationBar, boolean isTransStatusBar, boolean dark) {
         switch (RomUtils.getLightStatusBarAvailableRomType()) {
             case RomUtils.AvailableRomType.MIUI:
                 if (RomUtils.getMIUIVersionCode() >= VERSION_7) {
@@ -48,9 +47,7 @@ public class LightStatusBarUtils {
         }
     }
 
-
-    private static boolean setMIUILightStatusBar(Activity activity, boolean isMarginStatusBar
-            , boolean isMarginNavigationBar, boolean isTransStatusBar, boolean darkmode) {
+    private static boolean setMIUILightStatusBar(Activity activity, boolean isMarginStatusBar, boolean isMarginNavigationBar, boolean isTransStatusBar, boolean darkmode) {
         initStatusBarStyle(activity, isMarginStatusBar, isMarginNavigationBar);
 
         Class<? extends Window> clazz = activity.getWindow().getClass();
@@ -68,17 +65,14 @@ public class LightStatusBarUtils {
         return false;
     }
 
-    private static boolean setFlymeLightStatusBar(Activity activity, boolean isMarginStatusBar
-            , boolean isMarginNavigationBar, boolean isTransStatusBar, boolean dark) {
+    private static boolean setFlymeLightStatusBar(Activity activity, boolean isMarginStatusBar, boolean isMarginNavigationBar, boolean isTransStatusBar, boolean dark) {
         boolean result = false;
         if (activity != null) {
             initStatusBarStyle(activity, isMarginStatusBar, isMarginNavigationBar);
             try {
                 WindowManager.LayoutParams lp = activity.getWindow().getAttributes();
-                Field darkFlag = WindowManager.LayoutParams.class
-                        .getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
-                Field meizuFlags = WindowManager.LayoutParams.class
-                        .getDeclaredField("meizuFlags");
+                Field darkFlag = WindowManager.LayoutParams.class.getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
+                Field meizuFlags = WindowManager.LayoutParams.class.getDeclaredField("meizuFlags");
                 darkFlag.setAccessible(true);
                 meizuFlags.setAccessible(true);
                 int bit = darkFlag.getInt(null);
@@ -99,9 +93,7 @@ public class LightStatusBarUtils {
     }
 
     @TargetApi(11)
-    private static void setAndroidNativeLightStatusBar(Activity activity, boolean isMarginStatusBar
-            , boolean isMarginNavigationBar, boolean isTransStatusBar, boolean isDarkStatusBarIcon) {
-
+    private static void setAndroidNativeLightStatusBar(Activity activity, boolean isMarginStatusBar, boolean isMarginNavigationBar, boolean isTransStatusBar, boolean isDarkStatusBarIcon) {
         try {
             if (isTransStatusBar) {
                 Window window = activity.getWindow();
@@ -109,8 +101,7 @@ public class LightStatusBarUtils {
                     if (isMarginStatusBar && isMarginNavigationBar) {
                         //5.0版本及以上
                         if (isDarkStatusBarIcon && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                         } else {
                             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                         }
@@ -118,24 +109,18 @@ public class LightStatusBarUtils {
 
                         if (isDarkStatusBarIcon && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                         } else {
-                            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                         }
-
 
                     } else if (!isMarginStatusBar && isMarginNavigationBar) {
                         if (isDarkStatusBarIcon && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                         } else {
-                            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
                         }
-
 
                     } else {
                         //留出来状态栏 不留出来导航栏 没找到办法。。
@@ -158,17 +143,12 @@ public class LightStatusBarUtils {
         }
     }
 
-    private static void initStatusBarStyle(Activity activity, boolean isMarginStatusBar
-            , boolean isMarginNavigationBar) {
+    private static void initStatusBarStyle(Activity activity, boolean isMarginStatusBar, boolean isMarginNavigationBar) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (isMarginStatusBar && isMarginNavigationBar) {
                 activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            } else if (!isMarginStatusBar && !isMarginNavigationBar) {
-                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            } else if (!isMarginStatusBar && isMarginNavigationBar) {
-                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            } else if (!isMarginStatusBar) {
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             }
         }
     }

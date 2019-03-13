@@ -11,10 +11,9 @@
         android:layout_marginRight="2dp" />
 
     <com.luck.picture.lib.widget.longimage.SubsamplingScaleImageView
-        android:id="@+id/longImg"
+        android:id="@+id/long_img_iv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
+        android:layout_height="match_parent" />
 
     <ImageView
         android:id="@+id/iv_play"

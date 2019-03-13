@@ -7,15 +7,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 
 import com.luck.picture.lib.compress.Luban;
-import com.luck.picture.lib.compress.OnCompressListener;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.PictureSelectionConfig;
@@ -29,8 +26,9 @@ import com.luck.picture.lib.tools.AttrsUtils;
 import com.luck.picture.lib.tools.DateUtils;
 import com.luck.picture.lib.tools.DoubleUtils;
 import com.luck.picture.lib.tools.PictureFileUtils;
+import com.trello.rxlifecycle2.android.ActivityEvent;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropMulti;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,11 +41,12 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @author：luck
- * @data：2018/3/28 下午1:00
- * @描述: Activity基类
+ * data：2018/3/28 下午1:00
+ * 描述: Activity基类
+ *
+ * @author luck
  */
-public class PictureBaseActivity extends FragmentActivity {
+public class PictureBaseActivity extends RxAppCompatActivity {
     protected Context mContext;
     protected PictureSelectionConfig config;
     protected boolean openWhiteStatusBar, numComplete;
@@ -72,10 +71,7 @@ public class PictureBaseActivity extends FragmentActivity {
      * 具体沉浸的样式，可以根据需要自行修改状态栏和导航栏的颜色
      */
     public void immersive() {
-        ImmersiveManage.immersiveAboveAPI23(this
-                , colorPrimaryDark
-                , colorPrimary
-                , openWhiteStatusBar);
+        ImmersiveManage.immersiveAboveAPI23(this, colorPrimaryDark, colorPrimary, openWhiteStatusBar);
     }
 
     @Override
@@ -103,14 +99,11 @@ public class PictureBaseActivity extends FragmentActivity {
     private void initConfig() {
         outputCameraPath = config.outputCameraPath;
         // 是否开启白色状态栏
-        openWhiteStatusBar = AttrsUtils.getTypeValueBoolean
-                (this, R.attr.picture_statusFontColor);
+        openWhiteStatusBar = AttrsUtils.getTypeValueBoolean(this, R.attr.picture_statusFontColor);
         // 是否是0/9样式
-        numComplete = AttrsUtils.getTypeValueBoolean(this,
-                R.attr.picture_style_numComplete);
+        numComplete = AttrsUtils.getTypeValueBoolean(this, R.attr.picture_style_numComplete);
         // 是否开启数字勾选模式
-        config.checkNumMode = AttrsUtils.getTypeValueBoolean
-                (this, R.attr.picture_style_checkNumMode);
+        config.checkNumMode = AttrsUtils.getTypeValueBoolean(this, R.attr.picture_style_checkNumMode);
         // 标题栏背景色
         colorPrimary = AttrsUtils.getTypeValueColor(this, R.attr.colorPrimary);
         // 状态栏背景色
@@ -128,15 +121,6 @@ public class PictureBaseActivity extends FragmentActivity {
         outState.putString(PictureConfig.BUNDLE_CAMERA_PATH, cameraPath);
         outState.putString(PictureConfig.BUNDLE_ORIGINAL_PATH, originalPath);
         outState.putParcelable(PictureConfig.EXTRA_CONFIG, config);
-    }
-
-    protected void startActivity(Class clz, Bundle bundle) {
-        if (!DoubleUtils.isFastDoubleClick()) {
-            Intent intent = new Intent();
-            intent.setClass(this, clz);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        }
     }
 
     protected void startActivity(Class clz, Bundle bundle, int requestCode) {
@@ -170,7 +154,6 @@ public class PictureBaseActivity extends FragmentActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -189,9 +172,7 @@ public class PictureBaseActivity extends FragmentActivity {
      */
     protected void dismissCompressDialog() {
         try {
-            if (!isFinishing()
-                    && compressDialog != null
-                    && compressDialog.isShowing()) {
+            if (!isFinishing() && compressDialog != null && compressDialog.isShowing()) {
                 compressDialog.dismiss();
             }
         } catch (Exception e) {
@@ -199,58 +180,34 @@ public class PictureBaseActivity extends FragmentActivity {
         }
     }
 
-
     /**
      * compressImage
      */
     protected void compressImage(final List<LocalMedia> result) {
         showCompressDialog();
-        if (config.synOrAsy) {
-            Flowable.just(result)
-                    .observeOn(Schedulers.io())
-                    .map(new Function<List<LocalMedia>, List<File>>() {
-                        @Override
-                        public List<File> apply(@NonNull List<LocalMedia> list) throws Exception {
-                            List<File> files = Luban.with(mContext)
-                                    .setTargetDir(config.compressSavePath)
-                                    .ignoreBy(config.minimumCompressSize)
-                                    .loadLocalMedia(list).get();
-                            if (files == null) {
-                                files = new ArrayList<>();
-                            }
-                            return files;
+        Flowable.just(result)
+                .observeOn(Schedulers.io())
+                .map(new Function<List<LocalMedia>, List<File>>() {
+                    @Override
+                    public List<File> apply(@NonNull List<LocalMedia> list) throws Exception {
+                        List<File> files = Luban.with(mContext)
+                                .setTargetDir(null)
+                                .ignoreBy(config.minimumCompressSize)
+                                .loadLocalMedia(list).get();
+                        if (files == null) {
+                            files = new ArrayList<>();
                         }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<List<File>>() {
-                        @Override
-                        public void accept(@NonNull List<File> files) throws Exception {
-                            handleCompressCallBack(result, files);
-                        }
-                    });
-        } else {
-            Luban.with(this)
-                    .loadLocalMedia(result)
-                    .ignoreBy(config.minimumCompressSize)
-                    .setTargetDir(config.compressSavePath)
-                    .setCompressListener(new OnCompressListener() {
-                        @Override
-                        public void onStart() {
-                        }
-
-                        @Override
-                        public void onSuccess(List<LocalMedia> list) {
-                            RxBus.getDefault().post(new EventEntity(PictureConfig.CLOSE_PREVIEW_FLAG));
-                            onResult(list);
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            RxBus.getDefault().post(new EventEntity(PictureConfig.CLOSE_PREVIEW_FLAG));
-                            onResult(result);
-                        }
-                    }).launch();
-        }
+                        return files;
+                    }
+                })
+                .compose(this.<List<File>>bindUntilEvent(ActivityEvent.DESTROY))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<File>>() {
+                    @Override
+                    public void accept(@NonNull List<File> files) throws Exception {
+                        handleCompressCallBack(result, files);
+                    }
+                });
     }
 
     /**
@@ -268,7 +225,7 @@ public class PictureBaseActivity extends FragmentActivity {
                 // 如果是网络图片则不压缩
                 boolean http = PictureMimeType.isHttp(path);
                 boolean eqTrue = !TextUtils.isEmpty(path) && http;
-                image.setCompressed(eqTrue ? false : true);
+                image.setCompressed(!eqTrue);
                 image.setCompressPath(eqTrue ? "" : path);
             }
         }
@@ -301,49 +258,12 @@ public class PictureBaseActivity extends FragmentActivity {
         boolean isHttp = PictureMimeType.isHttp(originalPath);
         String imgType = PictureMimeType.getLastImgType(originalPath);
         Uri uri = isHttp ? Uri.parse(originalPath) : Uri.fromFile(new File(originalPath));
-        UCrop.of(uri, Uri.fromFile(new File(PictureFileUtils.getDiskCacheDir(this),
-                System.currentTimeMillis() + imgType)))
-                .withAspectRatio(config.aspect_ratio_x, config.aspect_ratio_y)
+        UCrop.of(uri, Uri.fromFile(new File(PictureFileUtils.getDiskCacheDir(this), System.currentTimeMillis() + imgType)))
+                .withAspectRatio(config.aspectRatioX, config.aspectRatioY)
                 .withMaxResultSize(config.cropWidth, config.cropHeight)
                 .withOptions(options)
                 .start(this);
     }
-
-    /**
-     * 多图去裁剪
-     *
-     * @param list
-     */
-    protected void startCrop(ArrayList<String> list) {
-        UCropMulti.Options options = new UCropMulti.Options();
-        int toolbarColor = AttrsUtils.getTypeValueColor(this, R.attr.picture_crop_toolbar_bg);
-        int statusColor = AttrsUtils.getTypeValueColor(this, R.attr.picture_crop_status_color);
-        int titleColor = AttrsUtils.getTypeValueColor(this, R.attr.picture_crop_title_color);
-        options.setToolbarColor(toolbarColor);
-        options.setStatusBarColor(statusColor);
-        options.setToolbarWidgetColor(titleColor);
-        options.setCircleDimmedLayer(config.circleDimmedLayer);
-        options.setShowCropFrame(config.showCropFrame);
-        options.setDragFrameEnabled(config.isDragFrame);
-        options.setShowCropGrid(config.showCropGrid);
-        options.setScaleEnabled(config.scaleEnabled);
-        options.setRotateEnabled(config.rotateEnabled);
-        options.setHideBottomControls(true);
-        options.setCompressionQuality(config.cropCompressQuality);
-        options.setCutListData(list);
-        options.setFreeStyleCropEnabled(config.freeStyleCropEnabled);
-        String path = list.size() > 0 ? list.get(0) : "";
-        boolean isHttp = PictureMimeType.isHttp(path);
-        String imgType = PictureMimeType.getLastImgType(path);
-        Uri uri = isHttp ? Uri.parse(path) : Uri.fromFile(new File(path));
-        UCropMulti.of(uri, Uri.fromFile(new File(PictureFileUtils.getDiskCacheDir(this),
-                System.currentTimeMillis() + imgType)))
-                .withAspectRatio(config.aspect_ratio_x, config.aspect_ratio_y)
-                .withMaxResultSize(config.cropWidth, config.cropHeight)
-                .withOptions(options)
-                .start(this);
-    }
-
 
     /**
      * 判断拍照 图片是否旋转
@@ -355,7 +275,8 @@ public class PictureBaseActivity extends FragmentActivity {
         if (degree > 0) {
             // 针对相片有旋转问题的处理方式
             try {
-                BitmapFactory.Options opts = new BitmapFactory.Options();//获取缩略图显示到屏幕上
+                //获取缩略图显示到屏幕上
+                BitmapFactory.Options opts = new BitmapFactory.Options();
                 opts.inSampleSize = 2;
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opts);
                 Bitmap bmp = PictureFileUtils.rotaingImageView(degree, bitmap);
@@ -365,7 +286,6 @@ public class PictureBaseActivity extends FragmentActivity {
             }
         }
     }
-
 
     /**
      * compress or callback
@@ -380,7 +300,6 @@ public class PictureBaseActivity extends FragmentActivity {
         }
     }
 
-
     /**
      * 如果没有任何相册，先创建一个最近相册出来
      *
@@ -390,8 +309,7 @@ public class PictureBaseActivity extends FragmentActivity {
         if (folders.size() == 0) {
             // 没有相册 先创建一个最近相册出来
             LocalMediaFolder newFolder = new LocalMediaFolder();
-            String folderName = config.mimeType == PictureMimeType.ofAudio() ?
-                    getString(R.string.picture_all_audio) : getString(R.string.picture_camera_roll);
+            String folderName = getString(R.string.picture_camera_roll);
             newFolder.setName(folderName);
             newFolder.setPath("");
             newFolder.setFirstImagePath("");
@@ -430,9 +348,7 @@ public class PictureBaseActivity extends FragmentActivity {
      */
     protected void onResult(List<LocalMedia> images) {
         dismissCompressDialog();
-        if (config.camera
-                && config.selectionMode == PictureConfig.MULTIPLE
-                && selectionMedias != null) {
+        if (config.camera && config.selectionMode == PictureConfig.MULTIPLE && selectionMedias != null) {
             images.addAll(images.size() > 0 ? images.size() - 1 : 0, selectionMedias);
         }
         Intent intent = PictureSelector.putIntentResult(images);
@@ -459,7 +375,6 @@ public class PictureBaseActivity extends FragmentActivity {
         dismissDialog();
     }
 
-
     /**
      * 获取DCIM文件下最新一条拍照记录
      *
@@ -469,22 +384,18 @@ public class PictureBaseActivity extends FragmentActivity {
         try {
             //selection: 指定查询条件
             String absolutePath = PictureFileUtils.getDCIMCameraPath();
-            String ORDER_BY = MediaStore.Files.FileColumns._ID + " DESC";
-            String selection = eqVideo ? MediaStore.Video.Media.DATA + " like ?" :
-                    MediaStore.Images.Media.DATA + " like ?";
+            String orderBy = MediaStore.Files.FileColumns._ID + " DESC";
+            String selection = eqVideo ? MediaStore.Video.Media.DATA + " like ?" : MediaStore.Images.Media.DATA + " like ?";
             //定义selectionArgs：
             String[] selectionArgs = {absolutePath + "%"};
             Cursor imageCursor = this.getContentResolver().query(eqVideo ?
-                            MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                            : MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
-                    selection, selectionArgs, ORDER_BY);
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI :
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, selection, selectionArgs, orderBy);
             if (imageCursor.moveToFirst()) {
-                int id = imageCursor.getInt(eqVideo ?
-                        imageCursor.getColumnIndex(MediaStore.Video.Media._ID)
-                        : imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
-                long date = imageCursor.getLong(eqVideo ?
-                        imageCursor.getColumnIndex(MediaStore.Video.Media.DURATION)
-                        : imageCursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
+                int id = imageCursor.getInt(eqVideo ? imageCursor.getColumnIndex(MediaStore.Video.Media._ID) :
+                        imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
+                long date = imageCursor.getLong(eqVideo ? imageCursor.getColumnIndex(MediaStore.Video.Media.DURATION) :
+                        imageCursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));
                 int duration = DateUtils.dateDiffer(date);
                 imageCursor.close();
                 // DCIM文件下最近时间30s以内的图片，可以判定是最新生成的重复照片
@@ -507,60 +418,11 @@ public class PictureBaseActivity extends FragmentActivity {
     protected void removeImage(int id, boolean eqVideo) {
         try {
             ContentResolver cr = getContentResolver();
-            Uri uri = eqVideo ? MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                    : MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            String selection = eqVideo ? MediaStore.Video.Media._ID + "=?"
-                    : MediaStore.Images.Media._ID + "=?";
-            cr.delete(uri,
-                    selection,
-                    new String[]{Long.toString(id)});
+            Uri uri = eqVideo ? MediaStore.Video.Media.EXTERNAL_CONTENT_URI : MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            String selection = eqVideo ? MediaStore.Video.Media._ID + "=?" : MediaStore.Images.Media._ID + "=?";
+            cr.delete(uri, selection, new String[]{Long.toString(id)});
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 录音
-     *
-     * @param data
-     */
-    protected String getAudioPath(Intent data) {
-        boolean compare_SDK_19 = Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT;
-        if (data != null && config.mimeType == PictureMimeType.ofAudio()) {
-            try {
-                Uri uri = data.getData();
-                final String audioPath;
-                if (compare_SDK_19) {
-                    audioPath = uri.getPath();
-                } else {
-                    audioPath = getAudioFilePathFromUri(uri);
-                }
-                return audioPath;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
-
-    /**
-     * 获取刚录取的音频文件
-     *
-     * @param uri
-     * @return
-     */
-    protected String getAudioFilePathFromUri(Uri uri) {
-        String path = "";
-        try {
-            Cursor cursor = getContentResolver()
-                    .query(uri, null, null, null, null);
-            cursor.moveToFirst();
-            int index = cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DATA);
-            path = cursor.getString(index);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return path;
     }
 }
